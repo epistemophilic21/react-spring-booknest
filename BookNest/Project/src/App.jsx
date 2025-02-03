@@ -1,16 +1,19 @@
-import Register from "./RegisterComponent/Register";
-import Login from "./LoginComponent/Login";
-import Home from "./HomeComponent/Home";
-import Description from "./DescriptionComponent/Description";
-import Cart from "./CartComponent/Cart";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { CartProvider } from "./Context/CartContext";
-import "./index.css";
-import { AuthProvider } from "./Context/AuthContext";
-import ProtectedRoute from "./ReUsableComponent/ProtectedComponent";
-import OrderComponent from "./CartComponent/OrderComponent";
-import UserProfile from "./Profile/UserProfile";
-import LocationNotFound from "./CartComponent/LocationNotFound";
+import {
+  Register,
+  Login,
+  Home,
+  Description,
+  Cart,
+  Router,
+  Route,
+  Routes,
+  CartProvider,
+  AuthProvider,
+  ProtectedRoute,
+  OrderComponent,
+  UserProfile,
+  LocationNotFound,
+} from "./imports";
 
 function App() {
   return (

@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import NavigationBar from "../NavBarComponent/NavigationBar";
-import { useBooks } from "../ReUsableComponent/UseEffectBooks";
+import { useNavigate, NavigationBar, useBooks } from "../imports";
 
 function Home() {
   const navigate = useNavigate();
@@ -32,7 +30,7 @@ function Home() {
       </div>
 
       <div className="container my-4">
-        <h3 className="text-center mb-4">Available Books</h3>
+        <h3 className="text-center mb-4 heading">AVAILABLE BOOKS</h3>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
           {books.map((value, index) => (
             <div className="col" key={index}>

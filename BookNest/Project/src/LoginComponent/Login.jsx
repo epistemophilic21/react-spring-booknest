@@ -1,12 +1,14 @@
-import { loginFields } from "../ReUsableComponent/InputFields";
-import { useFormik } from "formik";
-import { LoginSchema } from "../Schema/Schema";
-import { postLoginClient } from "../API/ClientAPI";
-import { useContext } from "react";
-import { AuthContext } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { PiWarningCircleDuotone } from "react-icons/pi";
-import { RiLightbulbFlashFill } from "react-icons/ri";
+import {
+  loginFields,
+  useFormik,
+  LoginSchema,
+  postLoginClient,
+  useContext,
+  AuthContext,
+  useNavigate,
+  PiWarningCircleDuotone,
+  FcReading,
+} from "../imports";
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -36,7 +38,7 @@ function Login() {
       className="d-flex justify-content-center gap-4  align-items-center flex-column"
       style={{ minHeight: "100vh" }}
     >
-      <RiLightbulbFlashFill style={{ fontSize: "5rem", color: "#fcc419" }} />
+      <FcReading style={{ fontSize: "7rem" }} />
       <div
         className="container p-4"
         style={{
@@ -59,14 +61,7 @@ function Login() {
             <div className="mb-4" key={key}>
               <input
                 type={value.type}
-                className="form-control "
-                style={{
-                  borderRadius: "0px",
-                  border: "none",
-                  borderBottom: "3px solid #1971c2",
-                  outlineColor: "none",
-                  boxShadow: "none",
-                }}
+                className="form-control inputBox"
                 name={value.name}
                 onChange={handleChange}
                 onBlur={handleBlur}

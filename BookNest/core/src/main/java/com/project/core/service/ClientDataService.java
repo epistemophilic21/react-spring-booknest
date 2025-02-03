@@ -125,6 +125,7 @@ public class ClientDataService {
       OrderBook orderBook = new OrderBook();
       orderBook.setClientDataBean(clientDataBean);
       orderBook.setTotalPrice(bookOrderDTO.getTotalPrice());
+      orderBook.setPaymentMethod(bookOrderDTO.getPaymentMethod());
       orderBook.setDate(bookOrderDTO.getDate());
 
       List<OrderBooks> orderBooksList = new ArrayList<>();

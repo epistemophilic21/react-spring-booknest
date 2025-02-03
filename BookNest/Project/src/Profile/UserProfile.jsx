@@ -1,62 +1,56 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../Context/AuthContext";
-import authApi from "../API/APIClient";
-import { RiShieldUserFill } from "react-icons/ri";
-import NavigationBar from "../NavBarComponent/NavigationBar";
+import {
+  useContext,
+  useState,
+  AuthContext,
+  RiShieldUserFill,
+  NavigationBar,
+  useUpdateClient,
+  getClientProfile,
+  ButtonComponent,
+  GenderComponent,
+  AddressComponent,
+  MobileComponent,
+} from "../imports";
 
 function UserProfile() {
   const { user } = useContext(AuthContext);
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); // Track edit mode
-
-  useEffect(() => {
-    if (!user || !user.sub) {
-      console.log("User not found, skipping fetch");
-      setLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        const response = await authApi.get(`/getClient/${user.sub}`);
-        console.log(response);
-        setUserData(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [user?.sub]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { userData, loading, setUserData } = useUpdateClient(user);
 
   if (loading) {
-    return <div className="container mt-5">Loading...</div>;
+    return (
+      <div
+        className="container d-flex justify-content-center align-items-center"
+        style={{ marginTop: "33px", height: "340px" }}
+      >
+        <div className="spinner-border text-primary " role="status"></div>
+      </div>
+    );
   }
 
   if (!user) {
     return <div className="container mt-5">User not found. Please log in.</div>;
   }
 
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
   const handleUpdateClick = () => {
     setIsEditing(true);
+    setErrors({});
+  };
+
+  const validateInputs = () => {
+    let tempErrors = {};
+    if (!userData.gender) tempErrors.gender = "Gender is required";
+    if (!userData.address.trim()) tempErrors.address = "Address is required";
+    if (!userData.mobileNumber.trim())
+      tempErrors.mobileNumber = "Phone number is required";
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
   const handleSaveClick = async () => {
-    try {
-      await authApi.put(`/update/${user.sub}`, userData);
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-    setIsEditing(false);
+    if (!validateInputs()) return;
+    await getClientProfile(user, userData, setIsEditing);
   };
 
   const handleChange = (e) => {
@@ -67,7 +61,7 @@ function UserProfile() {
     <>
       <NavigationBar />
       <div className="container mt-3">
-        <div className="card">
+        <div className="card border-0">
           <div className="card-body">
             <p className="card-title text-center">
               <RiShieldUserFill
@@ -76,97 +70,52 @@ function UserProfile() {
             </p>
 
             <div className="text-center my-4">
-              <h3>
-                Greetings,{" "}
-                {capitalizeFirstLetter(
-                  userData?.clientName || "No Name Provided"
-                )}
-                !
-              </h3>
+              <h3>Greetings, {userData?.clientName || "No Name Provided"}!</h3>
             </div>
 
             {/* Gender Section */}
-            <div className="mb-3">
-              <h6>Gender:</h6>
-              <select
-                className="form-select"
-                name="gender"
-                value={userData?.gender || "Select Gender"}
-                onChange={handleChange}
-                disabled={!isEditing}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Others">Others</option>
-              </select>
-            </div>
+            <GenderComponent
+              userData={userData}
+              handleChange={handleChange}
+              isEditing={isEditing}
+              errors={errors}
+            />
 
             {/* Email Section */}
             <div className="mb-3">
               <h6>Email:</h6>
               <input
                 type="email"
-                className="form-control"
+                className="form-control inputBox"
                 name="clientEmail"
-                placeholder="Enter your email"
-                value={userData?.clientEmail || ""}
+                value={userData.clientEmail || ""}
                 disabled
+                style={{ backgroundColor: "white" }}
               />
             </div>
 
             {/* Address Section */}
-            <div className="mb-3">
-              <h6>Address:</h6>
-              <textarea
-                className="form-control"
-                name="address"
-                placeholder="Enter your address"
-                rows="3"
-                value={userData?.address || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </div>
+            <AddressComponent
+              userData={userData}
+              handleChange={handleChange}
+              isEditing={isEditing}
+              errors={errors}
+            />
 
             {/* Phone Number Section */}
-            <div className="mb-3">
-              <h6>Phone Number:</h6>
-              <input
-                type="tel"
-                className="form-control"
-                name="mobileNumber"
-                placeholder="Enter your phone number"
-                value={userData?.mobileNumber || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </div>
+            <MobileComponent
+              userData={userData}
+              handleChange={handleChange}
+              isEditing={isEditing}
+              errors={errors}
+            />
 
             {/* Buttons */}
-            <div className="text-center mt-4">
-              <div className="d-flex justify-content-center gap-3 mt-4">
-                {isEditing ? (
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleSaveClick}
-                  >
-                    Save Profile
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={handleUpdateClick}
-                  >
-                    Update Profile
-                  </button>
-                )}
-                <button type="button" className="btn btn-secondary">
-                  Back
-                </button>
-              </div>
-            </div>
+            <ButtonComponent
+              handleSaveClick={handleSaveClick}
+              handleUpdateClick={handleUpdateClick}
+              isEditing={isEditing}
+            />
           </div>
         </div>
       </div>

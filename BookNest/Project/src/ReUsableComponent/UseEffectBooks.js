@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { CartContext } from "../Context/CartContext";
 import GoogleBooks from "../API/GoogleBooks";
+import authApi from "../API/APIClient";
 
 export const useBookDetail = (bookId) => {
   const { addToCart, toggleButton } = useContext(CartContext);
@@ -47,4 +48,35 @@ export const useBooks = () => {
     fetchData();
   }, []);
   return { books };
+};
+
+export const useUpdateClient = (user) => {
+  const [userData, setUserData] = useState({
+    gender: "",
+    address: "",
+    mobileNumber: "",
+  });
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (!user || !user.sub) {
+      console.log("User not found, skipping fetch");
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await authApi.get(`/getClient/${user.sub}`);
+        console.log(response);
+        setUserData(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user?.sub]);
+  return { userData, loading, setUserData };
 };

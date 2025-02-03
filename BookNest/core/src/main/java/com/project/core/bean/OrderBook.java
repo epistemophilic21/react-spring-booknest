@@ -29,6 +29,8 @@ public class OrderBook {
   private Date date;
   @Column(name = "total_price")
   private double totalPrice;
+  @Column(name = "payment_method")
+  private String paymentMethod;
 
   @ManyToOne
   @JoinColumn(name = "client_id", nullable = false)

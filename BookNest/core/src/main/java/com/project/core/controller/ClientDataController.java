@@ -58,7 +58,6 @@ public class ClientDataController {
   public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
     try {
       String token = clientDataService.verifyClient(authRequest);
-      System.out.println(token);
       AuthResponse response = new AuthResponse(HttpStatus.OK.value(), token);
       return ResponseEntity.ok(response);
     } catch (Exception e) {

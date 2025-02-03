@@ -35,9 +35,10 @@ export const postCustomAPI = async (checkoutData, user) => {
     date: checkoutData.date,
     totalPrice: checkoutData.totalPrice,
     books: checkoutData.books,
+    paymentMethod: checkoutData.paymentMethod,
   };
   const response = await authApi.post(`/postOrder/${user.sub}`, jsonData);
-  console.log(response.status);
+  return response;
 };
 
 export function getTodayDate() {
@@ -47,3 +48,13 @@ export function getTodayDate() {
   const day = String(today.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+export const getClientProfile = async (user, userData, setIsEditing) => {
+  try {
+    await authApi.put(`/update/${user.sub}`, userData);
+    alert("Profile updated successfully!");
+    setIsEditing(false);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};

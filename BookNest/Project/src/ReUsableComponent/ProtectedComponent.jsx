@@ -1,6 +1,4 @@
-import { useContext } from "react";
-import { AuthContext } from "../Context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { useContext, AuthContext, Navigate } from "../imports";
 
 function ProtectedComponent({ children }) {
   const { token } = useContext(AuthContext);

@@ -1,9 +1,12 @@
-import { Link, useParams } from "react-router-dom";
-import { TbArrowBackUpDouble } from "react-icons/tb";
-import { BiSolidCartAdd } from "react-icons/bi";
-import { MdVerified } from "react-icons/md";
-import NavigationBar from "../NavBarComponent/NavigationBar";
-import { useBookDetail } from "../ReUsableComponent/UseEffectBooks";
+import {
+  Link,
+  useParams,
+  TbArrowBackUpDouble,
+  BiSolidCartAdd,
+  MdVerified,
+  NavigationBar,
+  useBookDetail,
+} from "../imports";
 
 function Description() {
   const { bookId } = useParams();
@@ -14,8 +17,11 @@ function Description() {
     <>
       <NavigationBar />
       {/* First Section: Book Details */}
-      <div className="container mt-5">
-        <div className="card" style={{ maxWidth: "100%", margin: "auto" }}>
+      <div className="container mt-5 ">
+        <div
+          className="card border-0"
+          style={{ maxWidth: "100%", margin: "auto" }}
+        >
           {book && book.volumeInfo ? (
             <div className="row g-0">
               <div className="col-md-8">
@@ -55,15 +61,16 @@ function Description() {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="text-center p-5">Loading book details...</div>
-          )}
+          ) : null}
         </div>
       </div>
 
       {/* Second Section: Book Description */}
       <div className="container mt-2">
-        <div className="card p-3" style={{ maxWidth: "100%", margin: "auto" }}>
+        <div
+          className="card p-3 border-0"
+          style={{ maxWidth: "100%", margin: "auto" }}
+        >
           {book && book.volumeInfo ? (
             <>
               {book.volumeInfo.publisher && (
@@ -95,7 +102,13 @@ function Description() {
               )}
             </>
           ) : (
-            <div className="text-center p-5">Loading description...</div>
+            <div className="text-center p-5" style={{ marginTop: "90px" }}>
+              <div
+                className="spinner-border text-primary"
+                role="status"
+                style={{ width: "4rem", height: "4rem" }}
+              ></div>
+            </div>
           )}
         </div>
       </div>

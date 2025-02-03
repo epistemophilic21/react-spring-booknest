@@ -9,5 +9,6 @@ import lombok.Data;
 public class BookOrderDTO {
   private Date date;
   private double totalPrice;
+  private String paymentMethod;
   private List<BookDetails> books;
 }

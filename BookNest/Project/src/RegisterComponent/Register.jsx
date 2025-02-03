@@ -1,10 +1,12 @@
-import { registerFields } from "../ReUsableComponent/InputFields";
-import { useFormik } from "formik";
-import { RegisterSchema } from "../Schema/Schema";
-import { postRegisterClient } from "../API/ClientAPI";
-import { PiWarningCircleDuotone } from "react-icons/pi";
-import { Link } from "react-router-dom";
-import { RiLightbulbFlashFill } from "react-icons/ri";
+import {
+  registerFields,
+  useFormik,
+  RegisterSchema,
+  postRegisterClient,
+  PiWarningCircleDuotone,
+  Link,
+  FcReading,
+} from "../imports";
 
 function Register() {
   const initialValues = {
@@ -27,7 +29,7 @@ function Register() {
       className="d-flex justify-content-center align-items-center flex-column"
       style={{ minHeight: "100vh" }}
     >
-      <RiLightbulbFlashFill style={{ fontSize: "5rem", color: "#fcc419" }} />
+      <FcReading style={{ fontSize: "7rem" }} />
       <div
         className="container p-4"
         style={{
@@ -51,14 +53,7 @@ function Register() {
               <input
                 type={value.type}
                 name={value.name}
-                className="form-control"
-                style={{
-                  borderRadius: "0px",
-                  border: "none",
-                  borderBottom: "3px solid #1971c2",
-                  outlineColor: "none",
-                  boxShadow: "none",
-                }}
+                className="form-control inputBox"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values[value.name]}

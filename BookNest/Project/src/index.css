@@ -1,3 +1,28 @@
 * {
   font-family: "Poppins", serif;
 }
+
+.inputBox {
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #4dabf7;
+}
+
+.inputBox.form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.heading {
+  font-weight: bold;
+  font-size: 27px;
+  letter-spacing: 3px;
+  color: #868e96;
+}
+
+.mini-heading {
+  color: #1864ab;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}

@@ -1,12 +1,16 @@
-import { useContext, useState } from "react";
-import { CartContext } from "../Context/CartContext";
-import { RiDeleteBin6Fill } from "react-icons/ri";
-import NavigationBar from "../NavBarComponent/NavigationBar";
-import { AuthContext } from "../Context/AuthContext";
-import OrderComponent from "./OrderComponent";
-import LocationNotFound from "./LocationNotFound";
-import { getCustomAPI } from "../API/AuthAPICall";
-import { Link } from "react-router-dom";
+import {
+  useContext,
+  useState,
+  CartContext,
+  RiDeleteBin6Fill,
+  NavigationBar,
+  AuthContext,
+  OrderComponent,
+  LocationNotFound,
+  getCustomAPI,
+  Link,
+} from "../imports";
+
 const Cart = () => {
   const { user } = useContext(AuthContext);
   const [checkoutData, setCheckoutData] = useState(null);
@@ -30,7 +34,7 @@ const Cart = () => {
     <>
       <NavigationBar />
       <div className="container mt-5">
-        <h3 className="mb-4">Your Cart</h3>
+        <h3 className="mb-4 heading">YOUR CART</h3>
         {cart.length === 0 ? (
           <div className="alert alert-warning" role="alert">
             Your cart is empty.
