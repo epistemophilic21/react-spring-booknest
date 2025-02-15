@@ -2,6 +2,7 @@ package com.project.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,17 +50,19 @@ public class ClientDataService {
   JWTService jwtService;
 
   public boolean insertClientData(ClientDataBean clientDataBean) throws RuntimeException {
-    System.out.println(clientDataBean.toString());
-    if (clientDataBean.getClientEmail().isEmpty() || clientDataBean.getClientPassword().isEmpty()
-        || clientDataBean.getClientName().isEmpty()) {
-      throw new RuntimeException();
-    }
-    if (!clientDataRepository.existsByClientEmail(clientDataBean.getClientEmail())) {
-      clientDataBean.setClientPassword(passwordEncoder.encode(clientDataBean.getClientPassword()));
-      clientDataRepository.save(clientDataBean);
-      return true;
-    }
-    return false;
+    Optional.ofNullable(clientDataBean)
+        .filter(bean -> !clientDataBean.getClientEmail().isEmpty()
+            && !clientDataBean.getClientPassword().isEmpty() && !clientDataBean.getClientName().isEmpty())
+        .orElseThrow(() -> new RuntimeException("Client details cannot be empty"));
+
+    return Optional.ofNullable(clientDataBean.getClientEmail())
+        .filter(email -> !clientDataRepository.existsByClientEmail(email))
+        .flatMap(email -> {
+          clientDataBean.setClientPassword(passwordEncoder.encode(clientDataBean.getClientPassword()));
+          clientDataRepository.save(clientDataBean);
+          return Optional.of(true);
+        })
+        .orElse(false);
   }
 
   public String verifyClient(AuthRequest authRequest) {
@@ -71,10 +74,8 @@ public class ClientDataService {
     } else {
       throw new UsernameNotFoundException("Invalid user request!");
     }
-
   }
 
-  // * COMMON METHOD ::
   public ClientDataBean returnClientDataBean(String clientEmail) {
     ClientDataBean clientDataBean = clientDataRepository.findByClientEmail(clientEmail);
     return clientDataBean;
@@ -82,40 +83,36 @@ public class ClientDataService {
 
   public boolean updateClientDetails(String clientEmail, ClientDetailsBean clientDetailsBean) {
     try {
-      ClientDataBean clientDataBean = returnClientDataBean(clientEmail);
-      if (clientDataBean == null) {
-        throw new UsernameNotFoundException("Client with email " + clientEmail + " not found.");
-      }
-      if (clientDetailsRepository.existsByClientDataBean_ClientId(clientDataBean.getClientId())) {
-        ClientDetailsBean existingDetails = clientDetailsRepository
-            .findByClientDataBean_ClientId(clientDataBean.getClientId());
-        existingDetails.setGender(clientDetailsBean.getGender());
-        existingDetails.setMobileNumber(clientDetailsBean.getMobileNumber());
-        existingDetails.setAddress(clientDetailsBean.getAddress());
-        existingDetails.setClientDataBean(clientDataBean);
-        clientDetailsRepository.save(existingDetails);
-      } else {
-        clientDetailsBean.setClientDataBean(clientDataBean);
-        clientDetailsRepository.save(clientDetailsBean);
-      }
-      return true;
+      ClientDataBean clientDataBean = Optional.ofNullable(returnClientDataBean(clientEmail))
+          .orElseThrow(() -> new UsernameNotFoundException("email not found!"));
 
+      ClientDetailsBean clientDetailsBeanSave = Optional.ofNullable(clientDetailsRepository
+          .findByClientDataBean_ClientId(clientDataBean.getClientId()))
+          .map(existingDetails -> {
+            existingDetails.setGender(clientDetailsBean.getGender());
+            existingDetails.setMobileNumber(clientDetailsBean.getMobileNumber());
+            existingDetails.setAddress(clientDetailsBean.getAddress());
+            existingDetails.setClientDataBean(clientDataBean);
+            return existingDetails;
+          })
+          .orElseGet(() -> {
+            clientDetailsBean.setClientDataBean(clientDataBean);
+            return clientDetailsBean;
+          });
+      clientDetailsRepository.save(clientDetailsBeanSave);
+      return true;
     } catch (Exception e) {
       throw new UsernameNotFoundException("Invalid user request!", e);
     }
   }
 
   public ClientDetailsBean getClientDetail(String clientEmail) {
-    ClientDataBean clientDataBean = returnClientDataBean(clientEmail);
-    if (clientDataBean == null) {
-      throw new UsernameNotFoundException("Client with email " + clientEmail + " not found.");
-    }
-    if (clientDetailsRepository.existsByClientDataBean_ClientId(clientDataBean.getClientId())) {
-      ClientDetailsBean existingDetails = clientDetailsRepository
-          .findByClientDataBean_ClientId(clientDataBean.getClientId());
-      return existingDetails;
-    }
-    return null;
+    ClientDataBean clientDataBean = Optional.ofNullable(returnClientDataBean(clientEmail))
+        .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+    ClientDetailsBean existingDetails = Optional.ofNullable(clientDetailsRepository
+        .findByClientDataBean_ClientId(clientDataBean.getClientId()))
+        .orElse(null);
+    return existingDetails;
   }
 
   public boolean SaveOrder(String clientEmail, BookOrderDTO bookOrderDTO) {

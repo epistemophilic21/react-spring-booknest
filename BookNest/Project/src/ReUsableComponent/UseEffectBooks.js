@@ -52,6 +52,7 @@ export const useBooks = () => {
 
 export const useUpdateClient = (user) => {
   const [userData, setUserData] = useState({
+    clientName: "",
     gender: "",
     address: "",
     mobileNumber: "",
@@ -67,7 +68,6 @@ export const useUpdateClient = (user) => {
     const fetchData = async () => {
       try {
         const response = await authApi.get(`/getClient/${user.sub}`);
-        console.log(response);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

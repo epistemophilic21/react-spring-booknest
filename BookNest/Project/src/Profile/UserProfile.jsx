@@ -17,14 +17,15 @@ function UserProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState({});
   const { userData, loading, setUserData } = useUpdateClient(user);
-
+  console.log(user);
   if (loading) {
     return (
-      <div
-        className="container d-flex justify-content-center align-items-center"
-        style={{ marginTop: "33px", height: "340px" }}
-      >
-        <div className="spinner-border text-primary " role="status"></div>
+      <div className="text-center p-5" style={{ marginTop: "190px" }}>
+        <div
+          className="spinner-border text-primary"
+          role="status"
+          style={{ width: "4rem", height: "4rem" }}
+        ></div>
       </div>
     );
   }

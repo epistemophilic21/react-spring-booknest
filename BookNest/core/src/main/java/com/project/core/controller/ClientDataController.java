@@ -2,6 +2,9 @@ package com.project.core.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,22 +34,17 @@ public class ClientDataController {
   @Autowired
   ClientDataService clientDataService;
 
-  @Autowired
-  ClientDataBean clientDataBean;
-
   @PostMapping("/addClient")
   public ResponseEntity<ResponseMessage> postClientData(@RequestBody ClientDataBean clientDataBean) {
     ResponseMessage responseMessage;
     HttpStatus status;
     try {
-      boolean isClientExists = clientDataService.insertClientData(clientDataBean);
-      if (isClientExists) {
-        responseMessage = new ResponseMessage(HttpStatus.CREATED.value(), "SUCCESS");
-        status = HttpStatus.CREATED;
-      } else {
-        responseMessage = new ResponseMessage(HttpStatus.CONFLICT.value(), "Client email already exists.");
-        status = HttpStatus.CONFLICT;
-      }
+      Predicate<ClientDataBean> clientExistsPredicate = clientDataService::insertClientData;
+      boolean isClientExists = clientExistsPredicate.test(clientDataBean);
+      responseMessage = isClientExists ? new ResponseMessage(HttpStatus.CREATED.value(), "SUCCESS")
+          : new ResponseMessage(HttpStatus.CONFLICT.value(), "Client email already exists.");
+      status = isClientExists ? HttpStatus.CREATED : HttpStatus.CONFLICT;
+
     } catch (Exception e) {
       responseMessage = new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected error occurred.");
       status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -57,7 +55,8 @@ public class ClientDataController {
   @PostMapping("/authLogin")
   public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
     try {
-      String token = clientDataService.verifyClient(authRequest);
+      Function<AuthRequest, String> verifyClientFunction = clientDataService::verifyClient;
+      String token = verifyClientFunction.apply(authRequest);
       AuthResponse response = new AuthResponse(HttpStatus.OK.value(), token);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
@@ -70,13 +69,10 @@ public class ClientDataController {
   @PutMapping("/update/{clientEmail}")
   public ResponseEntity<ResponseMessage> updateDetails(@PathVariable String clientEmail,
       @RequestBody ClientDetailsBean clientDetailsBean) {
-    boolean isUpdated = clientDataService.updateClientDetails(clientEmail, clientDetailsBean);
-    ResponseMessage message;
-    if (isUpdated) {
-      message = new ResponseMessage(HttpStatus.OK.value(), "SUCCESS");
-    } else {
-      message = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "NOT FOUND");
-    }
+    BiPredicate<String, ClientDetailsBean> clientUpdatePredicate = clientDataService::updateClientDetails;
+    boolean isUpdated = clientUpdatePredicate.test(clientEmail, clientDetailsBean);
+    ResponseMessage message = isUpdated ? new ResponseMessage(HttpStatus.OK.value(), "SUCCESS")
+        : new ResponseMessage(HttpStatus.NOT_FOUND.value(), "NOT FOUND");
     return ResponseEntity.status(message.getStatusCode()).body(message);
   }
 
@@ -85,18 +81,20 @@ public class ClientDataController {
     ClientDetailsBean clientInfo = clientDataService.getClientDetail(clientEmail);
     Map<String, Object> response = new HashMap<>();
     if (clientInfo != null) {
-      response.put("clientName", clientInfo.getClientDataBean().getClientName());
-      response.put("gender", clientInfo.getGender());
-      response.put("mobileNumber", clientInfo.getMobileNumber());
-      response.put("clientEmail", clientInfo.getClientDataBean().getClientEmail());
-      response.put("address", clientInfo.getAddress());
+      response.putAll(Map.of(
+          "clientName", clientInfo.getClientDataBean().getClientName(),
+          "gender", clientInfo.getGender(),
+          "mobileNumber", clientInfo.getMobileNumber(),
+          "clientEmail", clientInfo.getClientDataBean().getClientEmail(),
+          "address", clientInfo.getAddress()));
     } else {
-      clientDataBean = clientDataService.returnClientDataBean(clientEmail);
-      response.put("clientName", clientDataBean.getClientName());
-      response.put("gender", "");
-      response.put("mobileNumber", "");
-      response.put("clientEmail", clientDataBean.getClientEmail());
-      response.put("address", "");
+      ClientDataBean clientDataBean = clientDataService.returnClientDataBean(clientEmail);
+      response.putAll(Map.of(
+          "clientName", clientDataBean.getClientName(),
+          "gender", "",
+          "mobileNumber", "",
+          "clientEmail", clientDataBean.getClientEmail(),
+          "address", ""));
     }
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -104,14 +102,10 @@ public class ClientDataController {
   @PostMapping("/postOrder/{clientEmail}")
   public ResponseEntity<ResponseMessage> postOrderDetails(@PathVariable String clientEmail,
       @RequestBody BookOrderDTO bookOrderDTO) {
-    ResponseMessage message;
-    boolean isSaved = clientDataService.SaveOrder(clientEmail, bookOrderDTO);
-    if (isSaved) {
-      message = new ResponseMessage(HttpStatus.OK.value(), "SUCCESS");
-    } else {
-      message = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "NOT FOUND");
-    }
+    BiPredicate<String, BookOrderDTO> isSavedBiPredicate = clientDataService::SaveOrder;
+    boolean isSaved = isSavedBiPredicate.test(clientEmail, bookOrderDTO);
+    ResponseMessage message = isSaved ? new ResponseMessage(HttpStatus.OK.value(), "SUCCESS")
+        : new ResponseMessage(HttpStatus.NOT_FOUND.value(), "NOT FOUND");
     return ResponseEntity.status(message.getStatusCode()).body(message);
   }
-
 }
