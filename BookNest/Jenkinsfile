@@ -1,0 +1,58 @@
+pipeline {
+    agent {
+        node{ 
+            label 'windows'
+            customWorkspace 'D:\\Jenkins-Workspace\\'
+        }
+    }
+    
+    stages {
+        stage('Build React App') {
+            steps {
+                dir('BookNest/Project') {
+                    script {
+                        if (isUnix()) {
+                            sh 'npm install'
+                            sh 'npm run build'
+                        } else {
+                            bat 'npm install'
+                            bat 'npm run build'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build Spring Boot App') {
+            steps {
+                dir('BookNest/core') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'DB_CREDENTIALS',
+                            usernameVariable: 'DB_USERNAME',
+                            passwordVariable: 'DB_PASSWORD'
+                        ),
+                        string(
+                            credentialsId: 'JWT_API_KEY',
+                            variable: 'API_KEY'
+                        )
+                    ]) {
+                        script {
+                            if (isUnix()) {
+                                sh 'mvn clean install'
+                            } else {
+                                bat 'mvn clean install'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+    }
+}

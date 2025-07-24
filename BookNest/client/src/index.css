@@ -1,0 +1,43 @@
+* {
+  font-family: "Poppins", serif;
+}
+
+.inputBox {
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #4dabf7;
+}
+
+.inputBox.form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.heading {
+  font-weight: bold;
+  font-size: 27px;
+  letter-spacing: 3px;
+  color: #868e96;
+}
+
+.mini-heading {
+  color: #1864ab;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.card-heading {
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 5px;
+  color: #343a40;
+}
+
+.view-details-btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease-in-out, transform 0.15s ease;
+}
