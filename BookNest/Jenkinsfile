@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
-                dir('BookNest/Project') {
+                dir('BookNest/client') {
                     script {
                         if (isUnix()) {
                             sh 'npm install'
