@@ -61,17 +61,29 @@ function UserProfile() {
   return (
     <>
       <NavigationBar />
-      <div className="container mt-3">
-        <div className="card border-0">
-          <div className="card-body">
-            <p className="card-title text-center">
-              <RiShieldUserFill
-                style={{ fontSize: "52px", color: "#1864ab" }}
-              />
-            </p>
+      <div className="container mt-4">
+        <div className="card border-0 shadow-sm rounded-4">
+          <div className="card-body px-4 py-5">
 
-            <div className="text-center my-4">
-              <h3>Greetings, {userData?.clientName || "No Name Provided"}!</h3>
+            {/* Profile Icon */}
+            <div className="text-center mb-4">
+              <div
+                className="d-inline-flex justify-content-center align-items-center rounded-circle shadow-sm"
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  backgroundColor: "#e7f5ff",
+                }}
+              >
+                <RiShieldUserFill style={{ fontSize: "48px", color: "#1864ab" }} />
+              </div>
+            </div>
+
+            {/* Greeting */}
+            <div className="text-center mb-4">
+              <h3 className="fw-semibold text-dark">
+                Greetings, {userData?.clientName || "No Name Provided"}!
+              </h3>
             </div>
 
             {/* Gender Section */}
@@ -83,15 +95,15 @@ function UserProfile() {
             />
 
             {/* Email Section */}
-            <div className="mb-3">
-              <h6>Email:</h6>
+            <div className="mb-4">
+              <h6 className="fw-bold text-secondary">Email:</h6>
               <input
                 type="email"
                 className="form-control inputBox"
                 name="clientEmail"
                 value={userData.clientEmail || ""}
                 disabled
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "#fff" }}
               />
             </div>
 
@@ -112,11 +124,14 @@ function UserProfile() {
             />
 
             {/* Buttons */}
-            <ButtonComponent
-              handleSaveClick={handleSaveClick}
-              handleUpdateClick={handleUpdateClick}
-              isEditing={isEditing}
-            />
+            <div className="mt-4">
+              <ButtonComponent
+                handleSaveClick={handleSaveClick}
+                handleUpdateClick={handleUpdateClick}
+                isEditing={isEditing}
+              />
+            </div>
+
           </div>
         </div>
       </div>

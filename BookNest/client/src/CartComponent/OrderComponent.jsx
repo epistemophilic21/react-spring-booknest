@@ -27,51 +27,63 @@ function OrderComponent({ checkoutData, user, setOrder }) {
   return (
     <div className="container mt-5">
       <div className="card border-0">
-        <div className="card-body ">
-          <h5 className="card-title mb-3 heading" style={{ fontSize: "20px" }}>
+        <div className="card-body">
+          <h5 className="card-title mb-4 card-heading" style={{ fontSize: "20px",  letterSpacing:2}}>
             ORDER DETAILS
           </h5>
-          <div className="mb-3">
-            <h6 className="mini-heading">ADDRESS</h6>
-            <p>{checkoutData.address || undefined}</p>
-          </div>
-          <div className="mb-3">
-            <h6 className="mini-heading">CONTACT</h6>
-            <p>{checkoutData.mobileNumber}</p>
+
+          <div className="d-flex flex-wrap gap-4">
+            {/* Left Column */}
+            <div className="flex-grow-1" style={{ minWidth: "250px", flexBasis: "48%" }}>
+              <div className="mb-3">
+                <h6 className="mini-heading">ADDRESS</h6>
+                <p>{checkoutData.address || undefined}</p>
+              </div>
+              <div className="mb-3">
+                <h6 className="mini-heading">CONTACT</h6>
+                <p>{checkoutData.mobileNumber}</p>
+              </div>
+              <div className="mb-3">
+                <h6 className="mini-heading">DATE</h6>
+                <p>{checkoutData.date}</p>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex-grow-1" style={{ minWidth: "250px", flexBasis: "48%" }}>
+              <PaymentComponent
+                payment={payment}
+                handleChange={handleChange}
+                error={error}
+              />
+
+              <div className="mb-3">
+                <h6 className="mini-heading">TOTAL AMOUNT</h6>
+                <p style={{ fontWeight: "bold", fontSize: "20px" }}>
+                  {checkoutData.totalPrice}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mb-3">
-            <h6 className="mini-heading">DATE</h6>
-            <p>{checkoutData.date}</p>
+          {/* Buttons below the columns */}
+          <div className="mt-4">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={postOrderData}
+            >
+              Order
+            </button>
+            <button
+              type="button"
+              className="btn ms-2"
+              onClick={() => setOrder(false)}
+              style={{ backgroundColor: "red", color: "white" }}
+            >
+              Cancel Order
+            </button>
           </div>
-          <PaymentComponent
-            payment={payment}
-            handleChange={handleChange}
-            error={error}
-          />
-
-          <div className="mb-3">
-            <h6 className="mini-heading">TOTAL AMOUNT</h6>
-            <p style={{ fontWeight: "bold", fontSize: "20px" }}>
-              {checkoutData.totalPrice}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={postOrderData}
-          >
-            Order
-          </button>
-          <button
-            type="button"
-            className="btn  ms-2"
-            onClick={() => setOrder(false)}
-            style={{ backgroundColor: "red", color: "white" }}
-          >
-            Cancel Order
-          </button>
         </div>
       </div>
     </div>

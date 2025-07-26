@@ -34,7 +34,7 @@ const Cart = () => {
     <>
       <NavigationBar />
       <div className="container mt-5">
-        <h3 className="mb-4 heading">YOUR CART</h3>
+        <h3 className="mb-4 card-heading">YOUR CART</h3>
         {cart.length === 0 ? (
           <div className="alert alert-warning" role="alert">
             Your cart is empty.
