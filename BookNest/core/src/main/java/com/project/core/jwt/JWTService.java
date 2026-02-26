@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JWTService {
 
-  @Value("${app.api.key}")
+  @Value("${jwt.secret}")
   public String SECRET;
 
   // Generate token with given user name
