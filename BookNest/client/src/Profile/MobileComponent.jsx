@@ -3,16 +3,15 @@ function MobileComponent({ userData, handleChange, isEditing, errors }) {
   return (
     <>
       <div className="mb-3">
-        <h6>Phone Number:</h6>
+        <h6 className="profile-field-label">Phone Number</h6>
         <input
           type="tel"
-          className="form-control inputBox"
+          className="form-control inputBox profile-input"
           name="mobileNumber"
           placeholder="Enter your phone number"
-          value={userData.mobileNumber}
+          value={userData.mobileNumber || ""}
           onChange={handleChange}
           disabled={!isEditing}
-          style={{ backgroundColor: "white" }}
         />
         {errors.mobileNumber && (
           <div className="alert alert-danger mt-2" role="alert">

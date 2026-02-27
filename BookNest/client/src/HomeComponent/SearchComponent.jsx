@@ -2,7 +2,8 @@ import { FaSearch } from "../imports"
 
 const SearchComponent = () => {
     return (
-        <div className="container my-4">
+        
+        <div className="container">
             <div className="row justify-content-center">
                 <div className="col-md-8">
                     <div className="input-group shadow-sm rounded overflow-hidden">
