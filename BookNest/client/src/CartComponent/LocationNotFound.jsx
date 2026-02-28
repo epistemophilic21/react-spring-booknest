@@ -1,21 +1,23 @@
 import { MdWrongLocation, Link } from "../imports";
+import "./LocationNotFound.css";
 
 function LocationNotFound() {
   return (
-    <div className="container mt-5">
-      <div className="card w-100 border-0">
-        {" "}
-        <div className="card-body text-center my-4">
-          <h5 className="card-title">
-            <MdWrongLocation style={{ fontSize: "90px", color: "#c92a2a" }} />
-          </h5>
-          <p className="card-text" style={{ color: "red" }}>
-            Location not found. Please update your user profile.
-          </p>
-          <Link to="/user" className="btn btn-primary">
-            Take me there
-          </Link>
+    <div className="location-not-found-wrap">
+      <div className="location-not-found-card">
+        <div className="location-icon-box">
+          <MdWrongLocation className="location-not-found-icon" />
         </div>
+
+        <h4>Location Not Found</h4>
+        <p>
+          We could not detect a valid delivery location. Update your profile
+          address to continue checkout.
+        </p>
+
+        <Link to="/user" className="location-action-btn">
+          Update Profile
+        </Link>
       </div>
     </div>
   );

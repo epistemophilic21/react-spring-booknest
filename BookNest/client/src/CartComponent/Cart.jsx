@@ -10,6 +10,7 @@ import {
   getCustomAPI,
   Link,
 } from "../imports";
+import "./Cart.css";
 
 const Cart = () => {
   const { user } = useContext(AuthContext);
@@ -33,111 +34,109 @@ const Cart = () => {
   return (
     <>
       <NavigationBar />
-      <div className="container mt-5">
-        <h3 className="mb-4 card-heading">YOUR CART</h3>
-        {cart.length === 0 ? (
-          <div className="alert alert-warning" role="alert">
-            Your cart is empty.
-          </div>
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Book Title</th>
-                  <th scope="col">Author</th>
-                  <th scope="col">Price</th>
-                  <th scope="col" style={{ textAlign: "center" }}>
-                    Quantity
-                  </th>
-                  <th scope="col">Amt./Qty</th>
-                  <th scope="col">Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item, index) => (
-                  <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{item.title}</td>
-                    <td>{item.authors}</td>
-                    <td>{item.price}</td>
-                    <td>
-                      {item.price !== "FREE" ? (
-                        <div className="d-flex justify-content-center align-items-center">
-                          <button
-                            className="btn btn-sm btn-primary"
-                            style={{ fontWeight: "bold", fontSize: "15px" }}
-                            onClick={() =>
-                              updateQuantity(item.id, -1, setOrder)
-                            }
-                          >
-                            -
-                          </button>
-                          <span className="mx-3" style={{ width: "6px" }}>
-                            {item.quantity}
-                          </span>
-                          <button
-                            className="btn btn-sm btn-primary"
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "15px",
-                            }}
-                            onClick={() =>
-                              updateQuantity(item.id, +1, setOrder)
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="d-flex justify-content-center align-items-center">
-                          <span className="mx-3">1</span>
-                        </div>
-                      )}
-                    </td>
-                    <td>{item.totalPrice}</td>
-                    <td>
-                      {" "}
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => removeFromCart(item.id, setOrder)}
-                      >
-                        <RiDeleteBin6Fill />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div
-              className="container"
-              style={{
-                textAlign: "end",
-                fontWeight: "bold",
-              }}
-            >
-              Total. {grandTotal}
-            </div>
-          </div>
-        )}
 
-        {cart.length != 0 ? (
-          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-4">
-            <button className="btn btn-secondary mb-2 mb-sm-0">
-              <Link
-                to="/home"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Continue Shopping
-              </Link>
-            </button>
-            <button className="btn btn-primary" onClick={handleCheckout}>
-              Proceed to Checkout
-            </button>
+      <div className="cart-page">
+        <div className="cart-shell">
+          <div className="cart-header">
+            <h2>Your Cart</h2>
+            <p>Review your books and update quantities before checkout.</p>
           </div>
-        ) : null}
+
+          {cart.length === 0 ? (
+            <div className="cart-empty-card" role="alert">
+              <h5>Your cart is empty</h5>
+              <p>Add a few books and come back here to checkout.</p>
+              <Link className="cart-link-btn" to="/home">
+                Explore Books
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div className="cart-table-card">
+                <div className="table-responsive">
+                  <table className="table cart-table align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Book Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Price</th>
+                        <th scope="col" className="text-center">
+                          Quantity
+                        </th>
+                        <th scope="col">Amt./Qty</th>
+                        <th scope="col" className="text-center">
+                          Remove
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cart.map((item, index) => (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td className="cart-title-cell">{item.title}</td>
+                          <td>{item.authors}</td>
+                          <td>{item.price}</td>
+                          <td>
+                            {item.price !== "FREE" ? (
+                              <div className="cart-qty-control">
+                                <button
+                                  className="cart-qty-btn"
+                                  onClick={() =>
+                                    updateQuantity(item.id, -1, setOrder)
+                                  }
+                                >
+                                  -
+                                </button>
+                                <span>{item.quantity}</span>
+                                <button
+                                  className="cart-qty-btn"
+                                  onClick={() =>
+                                    updateQuantity(item.id, +1, setOrder)
+                                  }
+                                >
+                                  +
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="cart-qty-free">1</div>
+                            )}
+                          </td>
+                          <td className="cart-total-cell">{item.totalPrice}</td>
+                          <td className="text-center">
+                            <button
+                              className="cart-delete-btn"
+                              onClick={() => removeFromCart(item.id, setOrder)}
+                              aria-label={`Remove ${item.title}`}
+                            >
+                              <RiDeleteBin6Fill />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="cart-summary-row">
+                  <span>Grand Total</span>
+                  <strong>{grandTotal}</strong>
+                </div>
+              </div>
+
+              <div className="cart-actions">
+                <Link className="cart-secondary-btn" to="/home">
+                  Continue Shopping
+                </Link>
+                <button className="cart-primary-btn" onClick={handleCheckout}>
+                  Proceed to Checkout
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
       {showOrder &&
         (isLocation ? (
           <OrderComponent
