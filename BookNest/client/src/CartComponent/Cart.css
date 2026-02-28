@@ -1,19 +1,26 @@
 .cart-page {
-  padding: 110px 16px 36px;
+  min-height: calc(100vh - 56px);
+  padding: 56px 16px 24px;
+  box-sizing: border-box;
   background: linear-gradient(to top, #b224ef 0%, #7579ff 100%);
+  display: flex;
+  justify-content: center;
 }
 
 .cart-shell {
-  max-width: 1100px;
-  margin: 0 auto;
+  width: min(1200px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .cart-header {
   margin-bottom: 18px;
+  text-align: center;
 }
 
 .cart-header h2 {
-  margin: 14px;
+  margin: 0;
   color: #111827;
   font-size: clamp(1.5rem, 2.3vw, 2.15rem);
   font-weight: 700;
@@ -34,6 +41,8 @@
 }
 
 .cart-table-card {
+  width: 100%;
+  margin-inline: auto;
   overflow: hidden;
 }
 
@@ -151,6 +160,8 @@
 }
 
 .cart-actions {
+  width: 100%;
+  margin-inline: auto;
   margin-top: 18px;
   display: flex;
   justify-content: space-between;
@@ -189,6 +200,8 @@
 }
 
 .cart-empty-card {
+  width: min(720px, 100%);
+  margin-inline: auto;
   padding: 34px 28px;
   text-align: center;
 }
@@ -206,7 +219,8 @@
 
 @media (max-width: 768px) {
   .cart-page {
-    padding-top: 92px;
+    min-height: calc(100vh - 56px);
+    padding: 42px 12px 20px;
   }
 
   .cart-table thead th,

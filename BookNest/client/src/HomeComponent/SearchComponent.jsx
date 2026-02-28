@@ -2,27 +2,18 @@ import { FaSearch } from "../imports"
 
 const SearchComponent = () => {
     return (
-        
         <div className="container">
             <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="input-group shadow-sm rounded overflow-hidden">
+                <div className="col-12 col-md-8 col-lg-6">
+                    <div className="input-group searchbar-shell">
                         <input
                             type="text"
-                            className="form-control border-0 px-3 py-2"
+                            className="form-control border-0 px-3 py-2 searchbar-input"
                             placeholder="Search for books..."
-                            style={{
-                                fontSize: '1rem',
-                            }}
                         />
                         <button
-                            className="btn btn-primary px-4"
+                            className="btn px-4 searchbar-btn"
                             type="button"
-                            style={{
-                                fontWeight: '500',
-                                outline: 'none',
-                                boxShadow: 'none',
-                            }}
                         >
                             <FaSearch/>
                         </button>

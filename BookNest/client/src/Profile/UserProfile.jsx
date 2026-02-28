@@ -1,6 +1,7 @@
 import {
   useContext,
   useState,
+  useEffect,
   AuthContext,
   RiShieldUserFill,
   NavigationBar,
@@ -11,12 +12,27 @@ import {
   AddressComponent,
   MobileComponent,
 } from "../imports";
+import { useRef } from "react";
 
 function UserProfile() {
   const { user } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(true);
   const [errors, setErrors] = useState({});
   const { userData, loading, setUserData } = useUpdateClient(user);
+  const initializedEditMode = useRef(false);
+
+  useEffect(() => {
+    if (loading || initializedEditMode.current) return;
+
+    const hasSavedProfile =
+      Boolean(userData?.gender?.trim()) &&
+      Boolean(userData?.address?.trim()) &&
+      Boolean(String(userData?.mobileNumber ?? "").trim());
+
+    setIsEditing(!hasSavedProfile);
+    initializedEditMode.current = true;
+  }, [loading, userData]);
+
   if (loading) {
     return (
       <div className="text-center p-5" style={{ marginTop: "190px" }}>
