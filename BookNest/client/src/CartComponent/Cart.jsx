@@ -17,12 +17,15 @@ const Cart = () => {
   const [checkoutData, setCheckoutData] = useState(null);
   const [isLocation, setLocation] = useState(false);
   const [showOrder, setOrder] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const { cart, removeFromCart, updateQuantity, grandTotal } =
     useContext(CartContext);
 
-  const handleCheckout = async () =>
-    await getCustomAPI(
+  const handleCheckout = async () => {
+    if (isCheckingOut) return;
+    setIsCheckingOut(true);
+    const result = await getCustomAPI(
       user,
       cart,
       setCheckoutData,
@@ -30,6 +33,11 @@ const Cart = () => {
       setOrder,
       grandTotal
     );
+    if (!result?.ok) {
+      alert("Unable to proceed to checkout right now. Please try again.");
+    }
+    setIsCheckingOut(false);
+  };
 
   return (
     <>
@@ -128,8 +136,13 @@ const Cart = () => {
                 <Link className="cart-secondary-btn" to="/home">
                   Continue Shopping
                 </Link>
-                <button className="cart-primary-btn" onClick={handleCheckout}>
-                  Proceed to Checkout
+                <button
+                  type="button"
+                  className="cart-primary-btn"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? "Checking..." : "Proceed to Checkout"}
                 </button>
               </div>
             </>

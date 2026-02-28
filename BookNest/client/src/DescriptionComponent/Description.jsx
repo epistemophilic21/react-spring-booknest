@@ -1,7 +1,6 @@
 import {
   Link,
   useParams,
-  TbArrowBackUpDouble,
   BiSolidCartAdd,
   MdVerified,
   NavigationBar,
@@ -53,7 +52,6 @@ function Description() {
                   </button>
 
                   <Link className="description-secondary-btn" to="/home">
-                    <TbArrowBackUpDouble />
                     Back
                   </Link>
                 </div>

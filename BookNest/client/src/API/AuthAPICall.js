@@ -8,26 +8,40 @@ export const getCustomAPI = async (
   setOrder,
   grandTotal
 ) => {
-  const { data } = await authApi.get(`/getClient/${user.sub}`);
-  if (data.address != "") {
-    const checkoutObject = {
-      clientName: data.clientName,
-      clientEmail: data.clientEmail,
-      mobileNumber: data.mobileNumber,
-      address: data.address,
-      books: cart.map(({ totalPrice, price, ...rest }) => ({
-        ...rest,
-        price: price === "FREE" ? 0 : price,
-      })),
-      totalPrice: grandTotal,
-      date: getTodayDate(),
-    };
-    setCheckoutData(checkoutObject);
-    setLocation(true);
-  } else {
-    setLocation(false);
+  try {
+    if (!user?.sub) {
+      throw new Error("User session not available");
+    }
+
+    const { data } = await authApi.get(`/getClient/${user.sub}`);
+    const hasAddress = Boolean(String(data?.address ?? "").trim());
+
+    if (hasAddress) {
+      const checkoutObject = {
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        mobileNumber: data.mobileNumber,
+        address: data.address,
+        books: cart.map(({ totalPrice, price, ...rest }) => ({
+          ...rest,
+          price: price === "FREE" ? 0 : price,
+        })),
+        totalPrice: grandTotal,
+        date: getTodayDate(),
+      };
+      setCheckoutData(checkoutObject);
+      setLocation(true);
+    } else {
+      setLocation(false);
+    }
+
+    setOrder(true);
+    return { ok: true };
+  } catch (error) {
+    console.error("Error preparing checkout:", error);
+    setOrder(false);
+    return { ok: false, error };
   }
-  setOrder(true);
 };
 
 export const postCustomAPI = async (checkoutData, user) => {
